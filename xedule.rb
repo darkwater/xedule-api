@@ -47,7 +47,7 @@ module Xedule
                 location_id: location_id
             }
 
-            attendee = Attendee.first_or_create({ id: data[:od] }, data)
+            attendee = Attendee.first_or_create({ id: data[:id] }, data)
             attendee.update(data)
 
             attendee
@@ -55,6 +55,8 @@ module Xedule
     end
 
     def self.schedule(attendee_id, year, week)
+        attendee = Attendee.get(attendee_id)
+
         event = nil
         events = []
 
