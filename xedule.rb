@@ -65,7 +65,7 @@ module Xedule
 
             if line == 'BEGIN:VEVENT'
                 event = Event.new
-                event.attendee_id = attendee_id
+                event.location_id = attendee.location_id
             elsif line == 'END:VEVENT'
                 event.save
                 events << event

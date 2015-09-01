@@ -20,6 +20,7 @@ class Location
 
     belongs_to :organisation
     has n, :attendees
+    has n, :events
 end
 
 class Attendee
@@ -31,7 +32,6 @@ class Attendee
 
     belongs_to :location
     has 1, :organisation, through: :location
-    has n, :events
 end
 
 class Event
@@ -47,18 +47,21 @@ class Event
     property :classes,     String, default: ''
     property :staff,       String, default: ''
     property :facilities,  String, default: ''
+    property :attendees,   String, default: ''
 
-    belongs_to :attendee
+    belongs_to :location
 
     def <<(attendee)
         case attendee.type
         when :class
-            self.classes = classes.split(';').push(attendee.name).join(';')
+            self.classes = classes.split(',').push(attendee.name).join(',')
         when :staff
-            self.staff = staff.split(';').push(attendee.name).join(';')
+            self.staff = staff.split(',').push(attendee.name).join(',')
         when :facility
-            self.facilities = facilities.split(';').push(attendee.name).join(';')
+            self.facilities = facilities.split(',').push(attendee.name).join(',')
         end
+
+        self.attendees = attendees.split(',').push(attendee.id).join(',')
     end
 end
 

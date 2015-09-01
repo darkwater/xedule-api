@@ -16,6 +16,10 @@ get '/:org/:loc/attendees.json' do |organisation_id, location_id|
 end
 
 get '/:org/:loc/:att/schedule.json' do |organisation_id, location_id, attendee_id|
-    Xedule.schedule(attendee_id, params[:year], params[:week])
-        .map{ |n| n.attributes.reject{ |k,v| k == :attendee_id } }.to_json
+    Xedule.schedule(attendee_id, params[:year], params[:week]).map do |n|
+        a = n.attributes
+        a.reject!{ |k,v| k == :attendee_id }
+        a[:attendees] = n.attendees.split(',').map(&:to_i)
+        a
+    end.to_json
 end
