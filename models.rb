@@ -68,9 +68,12 @@ end
 class CachedResponse
     include DataMapper::Resource
 
-    property :id,  Serial, key: true
-    property :url, String
-    property :age, Time
+    property :url,       String, key: true
+    property :timestamp, Time
+
+    def age
+        Time.now - timestamp
+    end
 end
 
 DataMapper.auto_migrate!

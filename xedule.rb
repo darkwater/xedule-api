@@ -4,6 +4,7 @@ require './models.rb'
 
 module Xedule
     def self.get(path)
+        puts "Getting #{path}"
         Net::HTTP.get(URI.join('https://summacollege.xedule.nl', path))
     end
 
