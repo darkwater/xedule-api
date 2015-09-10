@@ -1,5 +1,6 @@
 /tmp/
 Gemfile.lock
+cache.sqlite
 
 # Vim files
 [._]*.s[a-w][a-z]

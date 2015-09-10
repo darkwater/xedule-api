@@ -1,6 +1,6 @@
 require 'data_mapper'
 
-DataMapper.setup(:default, 'sqlite::memory:')
+DataMapper.setup(:default, "sqlite://#{File.expand_path File.dirname __FILE__}/cache.sqlite")
 
 class Organisation
     include DataMapper::Resource
@@ -9,7 +9,6 @@ class Organisation
     property :name, String
 
     has n, :locations
-    has n, :attendees, through: :locations
 end
 
 class Location
@@ -31,25 +30,25 @@ class Attendee
     property :name, String, index: true
 
     belongs_to :location
-    has 1, :organisation, through: :location
+    has n, :events, through: Resource
 end
 
 class Event
     include DataMapper::Resource
 
-    property :id,          Serial
+    property :id,          Serial, key: true
     property :year,        Integer
     property :week,        Integer
-    property :day,         Enum[ :sunday, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday ]
+    property :day,         Integer
     property :start,       String
     property :end,         String
     property :description, String
     property :classes,     String, default: ''
     property :staff,       String, default: ''
     property :facilities,  String, default: ''
-    property :attendees,   String, default: ''
 
     belongs_to :location
+    has n, :attendees, through: Resource
 
     def <<(attendee)
         case attendee.type
@@ -61,8 +60,15 @@ class Event
             self.facilities = facilities.split(',').push(attendee.name).join(',')
         end
 
-        self.attendees = attendees.split(',').push(attendee.id).join(',')
+        self.attendees << attendee
     end
+end
+
+class EventAttendee
+    include DataMapper::Resource
+
+    belongs_to :event,    key: true
+    belongs_to :attendee, key: true
 end
 
 class CachedResponse

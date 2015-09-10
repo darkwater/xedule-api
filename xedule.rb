@@ -48,8 +48,13 @@ module Xedule
                 location_id: location_id
             }
 
-            attendee = Attendee.first_or_create({ id: data[:id] }, data)
-            attendee.update(data)
+            if attendee = Attendee.get(data[:id])
+                attendee.update data
+            else
+                attendee = Attendee.create data
+            end
+
+            p attendee.errors unless attendee.saved?
 
             attendee
         end
@@ -75,7 +80,7 @@ module Xedule
                 case line
                 when /ATTENDEE;CN=([^:]+):MAILTO:noreply@xedule.nl
                      |LOCATION:(.+)$/x
-                    att = Attendee.first(name: $1 || $2, location: attendee.location)
+                    att = Attendee.first(name: $1 || $2, location_id: attendee.location_id)
                     event << att
                 when /DESCRIPTION:(.+)/
                     event.description = $1
