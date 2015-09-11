@@ -12,6 +12,7 @@ class Fixnum
 end
 
 before do
+    headers 'Access-Control-Allow-Origin' => '*'
     @url = "#{request.path}?#{request.query_string}"
     @cachedResponse = CachedResponse.get(@url)
 end
