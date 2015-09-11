@@ -62,6 +62,7 @@ module Xedule
 
     def self.schedule(attendee_id, year, week)
         attendee = Attendee.get(attendee_id)
+        attendee.events( year: year, week: week ).destroy
 
         event = nil
         events = []
