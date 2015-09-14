@@ -43,9 +43,9 @@ class Event
     property :start,       String
     property :end,         String
     property :description, String
-    property :classes,     String, default: ''
-    property :staff,       String, default: ''
-    property :facilities,  String, default: ''
+    property :classes,     String, default: '', length: 255
+    property :staff,       String, default: '', length: 255
+    property :facilities,  String, default: '', length: 255
 
     belongs_to :location
     has n, :attendees, through: Resource
@@ -53,7 +53,7 @@ class Event
     def <<(attendee)
         case attendee.type
         when :class
-            self.classes = classes.split(',').push(attendee.name).join(',')
+            self.classes = classes.split(',').push(attendee.name).join(',') # TODO: Check length
         when :staff
             self.staff = staff.split(',').push(attendee.name).join(',')
         when :facility

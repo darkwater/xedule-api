@@ -85,14 +85,19 @@ module Xedule
                 event.location_id = attendee.location_id
             elsif line == 'END:VEVENT'
                 event.save
+                p event.errors unless event.saved?
                 events << event
                 event = nil
             elsif not event.nil?
                 case line
-                when /ATTENDEE;CN=([^:]+):MAILTO:noreply@xedule.nl
-                     |LOCATION:(.+)$/x
-                    att = Attendee.first(name: $1 || $2, location_id: attendee.location_id)
-                    event << att
+                when /ATTENDEE;CN=([^:]+):MAILTO:noreply@xedule.nl/
+                    att = Attendee.first(name: $1, location_id: attendee.location_id)
+                    event << att unless att.nil?
+                when /LOCATION:(.+)$/
+                    $1.split('\, ').each do |location|
+                        att = Attendee.first(name: location, location_id: attendee.location_id)
+                        event << att unless att.nil?
+                    end
                 when /DESCRIPTION:(.+)/
                     event.description = $1
                 when /DTSTART.*:([0-9]+)T([0-9]+)$/ # yyyymmddThhmmss
