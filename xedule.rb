@@ -15,8 +15,13 @@ module Xedule
                 name: URI.unescape(name)
             }
 
-            organisation = Organisation.first_or_create({ id: data[:id] }, data)
-            organisation.update(data)
+            if organisation = Organisation.get(data[:id])
+                organisation.update data
+            else
+                organisation = Organisation.create data
+            end
+
+            p organisation.errors unless organisation.saved?
 
             organisation
         end
@@ -31,8 +36,13 @@ module Xedule
                 organisation_id: organisation_id
             }
 
-            location = Location.first_or_create({ id: data[:id] }, data)
-            location.update(data)
+            if location = Location.get(data[:id])
+                location.update data
+            else
+                location = Location.create data
+            end
+
+            p location.errors unless location.saved?
 
             location
         end
