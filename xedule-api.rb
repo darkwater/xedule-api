@@ -58,7 +58,7 @@ end
 
 get '/:org/:loc/:att/schedule.json' do |organisation_id, location_id, attendee_id|
     if @cachedResponse.nil? || @cachedResponse.age > 1.hours
-        @dataset = Xedule.schedule attendee_id.to_i, params[:year], params[:week]
+        @dataset = Xedule.schedule location_id.to_i, attendee_id.to_i, params[:year], params[:week]
         CachedResponse.first_or_create({ url: @url }, { timestamp: Time.now }).update( timestamp: Time.now )
         puts "Getting events for #{attendee_id} (#{params[:year]}/#{params[:week]}) fresh"
     else

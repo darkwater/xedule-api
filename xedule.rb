@@ -70,8 +70,16 @@ module Xedule
         end
     end
 
-    def self.schedule(attendee_id, year, week)
+    def self.schedule(location_id, attendee_id, year, week)
         attendee = Attendee.get(attendee_id)
+
+        unless attendee
+            attendees = self.attendees(location_id)
+            attendee = attendees.find{ |n| n.id == attendee_id }
+        end
+
+        return nil unless attendee
+
         attendee.events( year: year, week: week ).destroy
 
         event = nil
