@@ -1,6 +1,6 @@
 require 'data_mapper'
 
-DataMapper.setup(:default, "sqlite://#{File.expand_path File.dirname __FILE__}/cache.sqlite")
+DataMapper.setup :default, "mysql://xedule:bzWxn5qwOoGlOg7U@localhost/xedule"
 
 class Organisation
     include DataMapper::Resource
@@ -82,4 +82,4 @@ class CachedResponse
     end
 end
 
-DataMapper.auto_migrate!
+DataMapper.auto_upgrade!
