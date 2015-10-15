@@ -1,6 +1,6 @@
 require 'data_mapper'
 
-DataMapper.setup :default, "mysql://xedule:bzWxn5qwOoGlOg7U@localhost/xedule"
+DataMapper.setup :default, "mysql://xedule:#{File.read('mysql.pass').chomp}@localhost/xedule"
 
 class Organisation
     include DataMapper::Resource
